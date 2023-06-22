@@ -1,0 +1,7 @@
+{% from 'macros.html' import shopingView%}
+{% extends "base.html" %} {% block content %}
+
+<h1>{{current_user.username}}!! Welcome to GroceryHub</h1>
+<a href="{{url_for('logout')}}">Logout</a>
+{{shopingView()}}
+{% endblock %}

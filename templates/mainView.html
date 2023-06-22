@@ -1,0 +1,15 @@
+{% from "macros.html" import regLoginForm %} {% extends "base.html" %}
+{% block content%}
+<body>
+  <h1>Welcome to Grocery Hub</h1>
+  <h3></h3>
+  <form method="post" action="/">
+    <input type="submit" value="Login" name="loginAction"/>
+    <input type="submit" value="Register" name="registerAction" />
+  </form>
+  {{regLoginForm(form)}}
+  {% if error %}
+  <h5>{{error}}</h5>
+  {% endif %}
+</body>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% macro shopingView() %}
+<h1>Shopping view macro</h1>
+{% endmacro %}
+
+
+{% macro regLoginForm(form) %}
+<div>
+  <form method="POST" action="{{form.action}}">
+    {{ form.csrf_token }} {{form.hidden_tag()}} {{form.username}}
+    {{form.password}} {{form.submit}}
+  </form>
+</div>
+{% endmacro %}
+
