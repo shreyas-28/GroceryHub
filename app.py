@@ -50,11 +50,11 @@ def mainView():
 def login():
     loginForm = loginForms.LoginForm()
     if (loginForm.validate_on_submit()):
-        UserModel = UserModel.query.filter_by(username=loginForm.username.data).first()
-        if UserModel:
-            if (bcrypt.check_password_hash(UserModel.password, loginForm.password.data)):
-                print(UserModel)
-                login_user(UserModel)
+        user = UserModel.query.filter_by(username=loginForm.username.data).first()
+        if user:
+            if (bcrypt.check_password_hash(user.password, loginForm.password.data)):
+                print(user)
+                login_user(user)
                 return redirect(url_for('dashboard'))
         else:
             return redirect(url_for("mainView"))
