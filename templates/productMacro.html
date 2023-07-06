@@ -6,15 +6,25 @@
     {{form.valuePerUnit}} {{form.section}} {{form.submit}}
   </form>
 </div>
-{% endmacro %}
-
-
-{% macro productCard(productData) %}
-<div class="card" style="width: 18rem;">
-  <img class="card-img-top" src={{productData.productImage}} alt="Card image cap" style="height:20rem">
+{% endmacro %} {% macro productCard(productData) %}
+<div class="card" style="width: 18rem">
+  <img
+    class="card-img-top"
+    src="{{productData.productImage}}"
+    alt="Card image cap"
+    style="height: 20rem"
+  />
   <div class="card-body">
     <h5 class="card-title">{{productData.productName}}</h5>
-    <h6>{{productData.}}{{productData.valuePerUnit}} Rs</h6>
+    <h6>{{productData.valuePerUnit}} Rs</h6>
   </div>
+  <form method="post" action="{{url_for('addToCart',productId=productData.productId)}}" type="button" class="btn btn-primary">
+    <input type="submit" value="Add to cart" name="Add to cart" />
+  </form>
+  <script>
+    function addToCart(productId) {
+      fetch("[your.local.host.]/cart/productId", { method: "POST" });
+    }
+  </script>
 </div>
 {% endmacro %}

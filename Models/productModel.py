@@ -1,4 +1,5 @@
 from .mainModel import db
+from .utilModel import MutableDict,JSONEncodedDict
 import sqlalchemy
 import enum
 from sqlalchemy import Enum
@@ -29,3 +30,9 @@ class ProductModel(db.Model):
 
     def get_id(self):
         return self.productId
+
+class Cart(db.Model):
+    cartId = db.Column(db.Integer,primary_key = True)
+    userId = db.Column(db.Integer,db.ForeignKey('user_model.uuid'))
+    totalValue = db.Column(db.Integer)
+    products = db.Column(MutableDict.as_mutable(JSONEncodedDict)) 

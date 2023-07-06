@@ -8,3 +8,4 @@ class UserModel(db.Model, UserMixin):
 
     def get_id(self):
         return self.uuid
+    

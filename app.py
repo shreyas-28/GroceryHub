@@ -10,7 +10,7 @@ import Forms.addProduct as addProductForm
 from wtforms.validators import ValidationError
 from Models.mainModel import db
 from Models.userModel import UserModel
-from Models.productModel import ProductModel
+from Models.productModel import ProductModel,Cart
 from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
@@ -60,12 +60,21 @@ def login():
         user = UserModel.query.filter_by(
             username=loginForm.username.data).first()
         if user:
+            print("User Identified")
             if (bcrypt.check_password_hash(user.password, loginForm.password.data)):
                 print(user)
                 login_user(user)
-                return redirect(url_for('dashboard'))
-        else:
-            return redirect(url_for("mainView"))
+            print("Cart checking")
+    cart = Cart.query.filter_by(userId = user.uuid).first()
+    print('cart',cart)
+    if not cart:
+        print('Creating a new cart')
+        new_cart = Cart(userId=user.uuid,totalValue = 0,products={})
+        db.session.add(new_cart)
+        db.session.commit()
+    return redirect(url_for('dashboard'))
+        # else:
+        #     return redirect(url_for("mainView"))
 
 
 @app.route("/register.html", methods=['GET', 'POST'])
@@ -100,6 +109,21 @@ def addProduct():
         db.session.commit()
     return redirect(url_for('dashboard'))
 
+@app.route('/addToCart/<productId>', methods=['POST'])
+@login_required
+def addToCart(productId):
+    print('addToCart')
+    productToAdd = ProductModel.query.filter_by(productId = productId).first()
+    cart = Cart.query.filter_by(userId =current_user.uuid).first()
+    productKey = str(productToAdd.productId)
+    if productKey not in cart.products:
+        print("new cart item")
+        cart.products[productKey] = 0
+    cart.products[productKey]+=1
+    cart.totalValue += productToAdd.valuePerUnit
+    db.session.commit()
+    return redirect(url_for('dashboard'))
+
 
 @app.route('/dashboard', methods=['POST', 'GET'])
 @login_required
@@ -118,6 +142,12 @@ def logout():
     logout_user()
     return redirect(url_for('mainView'))
 
+# @app.route('/cart', methods=['POST', 'GET'])
+# @login_required
+# def cart():
+#     myCart = Cart.query.all()
+#     for i in myCart.keys()
+#     return render_template('cart.html',cartData = myCart)
 
 if __name__ == "__main__":
     app.run(debug=True)
