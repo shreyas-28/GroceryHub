@@ -1,0 +1,20 @@
+{% macro productForm(form) %}
+<div>
+  <form method="POST" action="{{form.action}}">
+    {{ form.csrf_token }} {{form.hidden_tag()}} {{form.productName}}
+    {{form.productImage}}{{form.manufacturingDate}}{{form.expiryDate}}{{form.quantityInStore}}
+    {{form.valuePerUnit}} {{form.section}} {{form.submit}}
+  </form>
+</div>
+{% endmacro %}
+
+
+{% macro productCard(productData) %}
+<div class="card" style="width: 18rem;">
+  <img class="card-img-top" src={{productData.productImage}} alt="Card image cap" style="height:20rem">
+  <div class="card-body">
+    <h5 class="card-title">{{productData.productName}}</h5>
+    <h6>{{productData.}}{{productData.valuePerUnit}} Rs</h6>
+  </div>
+</div>
+{% endmacro %}

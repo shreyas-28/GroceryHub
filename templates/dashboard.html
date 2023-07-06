@@ -1,7 +1,11 @@
-{% from 'macros.html' import shopingView%}
-{% extends "base.html" %} {% block content %}
+{% from 'productMacro.html' import productForm,productCard %} {% extends
+"base.html" %} {% block content %}
 
-<h1>{{current_user.username}}!! Welcome to GroceryHub</h1>
-<a href="{{url_for('logout')}}">Logout</a>
-{{shopingView()}}
-{% endblock %}
+<h6>Welcome {{current_user.username}}</h6>
+
+<div class="row" style="display:flex;flex-direction:row;flex-wrap: nowrap; overflow: scroll">
+  {% for productData in productDataArray %}
+  <div >{{productCard(productData)}}</div>
+  {% endfor %}
+</div>
+{{productForm(productFormProp)}} {% endblock %}
