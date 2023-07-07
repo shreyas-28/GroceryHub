@@ -27,12 +27,13 @@ class ProductModel(db.Model):
     quantityInStore = db.Column(db.Integer, nullable=False)
     section = db.Column(Enum(Sections), nullable=False)
     valuePerUnit = db.Column(db.Float,nullable=False)
+    quantityInCart = db.Column(db.Integer)
 
     def get_id(self):
         return self.productId
 
 class Cart(db.Model):
     cartId = db.Column(db.Integer,primary_key = True)
-    userId = db.Column(db.Integer,db.ForeignKey('user_model.uuid'))
-    totalValue = db.Column(db.Integer)
+    userId = db.Column(db.Integer,db.ForeignKey('user_model.uuid'),nullable =False)
+    totalValue = db.Column(db.Integer,nullable=False)
     products = db.Column(MutableDict.as_mutable(JSONEncodedDict)) 

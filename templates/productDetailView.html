@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% from "productMacro.html" import productDetailView %}
+
+{% block content %}
+{{productDetailView(productData)}}
+{% endblock %}

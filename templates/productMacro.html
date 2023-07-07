@@ -7,24 +7,103 @@
   </form>
 </div>
 {% endmacro %} {% macro productCard(productData) %}
-<div class="card" style="width: 18rem">
+<div
+  class="card"
+  style="width: 18rem ;background-color: #17a2b8 !important; margin: 0 0.25rem"
+>
+<div class="card-body" styles="display:flex !important; flex-direction:row;">
+  <h5 class="card-title">{{productData.productName}}</h5>
+  <h6>{{productData.valuePerUnit}} Rs</h6>
+</div>
   <img
     class="card-img-top"
     src="{{productData.productImage}}"
     alt="Card image cap"
     style="height: 20rem"
   />
-  <div class="card-body">
-    <h5 class="card-title">{{productData.productName}}</h5>
-    <h6>{{productData.valuePerUnit}} Rs</h6>
-  </div>
-  <form method="post" action="{{url_for('addToCart',productId=productData.productId)}}" type="button" class="btn btn-primary">
-    <input type="submit" value="Add to cart" name="Add to cart" />
+  <a
+    href="{{url_for('productDetailView',productId=productData.productId)}}"
+    style="position: absolute; right: 1rem; top: 0.5rem; color: white"
+  >
+    <span class="material-symbols-outlined"> info </span>
+  </a>
+  <form
+    method="post"
+    action="{{url_for('addToCart',kwargs ={'productId':productData.productId})}}"
+    type="button"
+    class="btn btn-secondary"
+  >
+    <input
+      type="submit"
+      value="Add to cart"
+      name="Add to cart"
+      style="all: unset"
+    />
   </form>
-  <script>
-    function addToCart(productId) {
-      fetch("[your.local.host.]/cart/productId", { method: "POST" });
-    }
-  </script>
+</div>
+{% endmacro %} {% macro productCartView(productData,quantity) %}
+<li
+  class="list-group-item"
+  style="
+    height: 4rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  "
+>
+  <img
+    style="max-width: 100%; max-height: 100%"
+    src="{{productData.productImage}}"
+  />
+  <h5>{{productData.productName}}</h5>
+  <h6>{{productData.valuePerUnit}} Rs</h6>
+  <h6>{{quantity}}</h6>
+  <h6>{{quantity*productData.valuePerUnit}} Rs</h6>
+  <form
+    method="post"
+    action="{{url_for('addToCart',kwargs ={'productId':productData.productId,'origin':'cart'})}}"
+    type="button"
+    class="btn btn-secondary"
+  >
+    <input
+      type="submit"
+      value="Add to cart"
+      name="Add to cart"
+      style="all: unset"
+    />
+  </form>
+</li>
+{% endmacro %} {% macro productDetailView(productData) %}
+<div
+  style="
+    height: 30rem;
+    display: flex;
+    padding: 0rem 2rem 0rem 2rem;
+    flex-direction: row;
+  "
+>
+  <img
+    style="max-width: 100%; max-height: 100%; margin-right: 10rem"
+    src="{{productData.productImage}}"
+  />
+  <div style="align-self: center">
+    <h5>{{productData.productName}}</h5>
+    <h6>{{productData.valuePerUnit}} Rs</h6>
+    <h6>{{productData.quantityInCart}}</h6>
+    <h6>{{productData.quantityInCart*productData.valuePerUnit}} Rs</h6>
+    <form
+      method="post"
+      action="{{url_for('addToCart',kwargs ={'productId':productData.productId,'origin':'cart'})}}"
+      type="button"
+      class="btn btn-secondary"
+    >
+      <input
+        type="submit"
+        value="Add to cart"
+        name="Add to cart"
+        style="all: unset"
+      />
+    </form>
+  </div>
 </div>
 {% endmacro %}

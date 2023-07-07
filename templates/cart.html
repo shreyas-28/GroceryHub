@@ -1,0 +1,25 @@
+{% from 'productMacro.html' import productCartView %} {% extends "base.html" %}
+{% block content %}
+<ul class="list-group">
+  <li
+    class="list-group-item"
+    style="
+      height: 4rem;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    "
+  >
+    <div style="margin-right:15rem">
+    <h6 >Product</h6>
+    </div>
+    <h6>Value per Unit</h6>
+    <h6>Quantity</h6>
+    <h6>Value for the item</h6>
+    <h6>Add more</h6>
+</li>
+
+  {% for product in cartDataProp %}
+  {{productCartView(product,cartDataProp[product])}} {% endfor %}
+</ul>
+{% endblock %}
