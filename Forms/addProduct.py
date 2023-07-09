@@ -5,7 +5,6 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, IntegerField, SelectField,FloatField
 from wtforms.validators import InputRequired, Length, ValidationError,DataRequired
 from wtforms.fields import DateField
-from Models.productModel import Sections
 
 class ProductForm(FlaskForm):
     productName = StringField(validators=[InputRequired(), Length(
@@ -16,6 +15,15 @@ class ProductForm(FlaskForm):
     expiryDate = DateField(label='Manufacuring Date',validators=[DataRequired()])
     quantityInStore = IntegerField('Total quantity',validators=[InputRequired()])
     valuePerUnit = FloatField('Cost/Unit',validators=[InputRequired()])
-    section = SelectField("Section", choices=[(choice.name, choice.value) for choice in Sections])
+    section = StringField(validators=[InputRequired(), Length(
+        min=4, max=80)], render_kw={"placeholder": "section"})
     submit = SubmitField("Add Product")
     action = "/addProduct.html"
+
+
+class SectionForm(FlaskForm):
+        sectionName = StringField(validators=[InputRequired(), Length(
+        min=4, max=20)], render_kw={"placeholder": "Name of the section"})
+        action ="/addSection.html"
+        submit = SubmitField("Add Section")
+

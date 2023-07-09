@@ -14,6 +14,30 @@
   {{ form.csrf_token }} {{form.hidden_tag()}}
   <div>{{form.username(style="width:100%")}}</div>
   <div>{{form.password(style="width:100%")}}</div>
+  <div>
+    <input type="radio" name="isAdmin" id="isAdmin" value="Yes"> Admin Login? </input>
+  </div>
   <div>{{form.submit(style="width:100%")}}</div>
 </form>
 {% if form.errors%} {{form.errors}} {% endif %} {% endmacro %}
+
+
+{% macro sectionForm(form) %}
+<form
+  method="POST"
+  action="{{form.action}}"
+  style="
+    display: flex;
+    height: 9rem;
+    width: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+  "
+>
+  {{ form.csrf_token }} 
+  <div>
+    {{form.sectionName}}  
+    {{form.submit}}
+  </div>
+</form>
+{% endmacro %}

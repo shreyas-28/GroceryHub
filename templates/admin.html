@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% from 'productMacro.html' import productForm %}
+{% from 'macros.html' import sectionForm %}
+
+{% block navContent %} {% if current_user.isAdmin %}
+<li class="nav-item">
+  <a class="nav-link" href="{{url_for('admin')}}">Admin control</a>
+</li>
+{% endif %} {% endblock %}
+{% block content %}
+  {% if message %}
+  <div class="alert alert-warning" role="alert">{{message}}</div>
+  {% endif %}
+<h4 style="color: antiquewhite;">Admin View only</h4>
+<br>
+<h6 style="color: antiquewhite;">Add a new product</h6>
+{{productForm(addProductForm,sections)}}
+<br>
+<h6 style="color: antiquewhite;">Add a new section</h6>
+{{sectionForm(sectionFormProps)}}
+{% endblock %}
+

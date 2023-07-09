@@ -5,7 +5,7 @@ import Forms.addProduct as addProductForm
 from wtforms.validators import ValidationError
 from Models.mainModel import db
 from Models.userModel import UserModel
-from Models.productModel import ProductModel,Cart, Sections
+from Models.productModel import ProductModel,Cart, SectionModel
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
 
@@ -27,6 +27,8 @@ def load_user(user_id):
     return UserModel.query.get(int(user_id))
 
 def cart_init():
+    print('fixing_db')
+    # fix_db()
     cart = Cart.query.filter_by(userId = current_user.uuid).first()
     print('cart',cart)
     print("Initialising app......")
@@ -44,10 +46,13 @@ def cart_init():
     else:
         print("Loading older cart ..........")
         cartData = cart.products
-        for product in cartData:
-            print("adding from older cart...",product)
-            dbProduct = ProductModel.query.filter_by(productId = int(product)).first()
-            dbProduct.quantityInCart = cartData[product]
+        if(cartData):
+            for product in cartData:
+                print("adding from older cart...",product)
+                dbProduct = ProductModel.query.filter_by(productId = int(product)).first()
+                dbProduct.quantityInCart = cartData[product]
+        else:
+            cart.products = {}
         db.session.commit()
 
 @app.route("/", methods=['POST', 'GET'])
@@ -80,7 +85,11 @@ def login():
         user = UserModel.query.filter_by(
             username=loginForm.username.data).first()
         if user:
-            print("User Identified")
+            isAdmin = len(request.form.getlist('isAdmin'))
+            if isAdmin and not user.isAdmin:
+                return redirect(url_for('mainView',error = "Not admin login"))
+            if not isAdmin and user.isAdmin:
+                return redirect(url_for('mainView',error = "Admin login! Use correct form."))
             if (bcrypt.check_password_hash(user.password, loginForm.password.data)):
                 print(user)
                 login_user(user)
@@ -124,12 +133,24 @@ def addProduct():
                                     manufacturingDate=productForm.manufacturingDate.data,
                                     expiryDate=productForm.expiryDate.data, 
                                     quantityInStore=productForm.quantityInStore.data, 
-                                    section=Sections[productForm.section.data], 
+                                    section=request.form['section'].lower(), 
                                     valuePerUnit=productForm.valuePerUnit.data)
         print("Adding new product",new_product)
         db.session.add(new_product)
         db.session.commit()
     return redirect(url_for('dashboard'))
+
+@app.route('/addSection.html', methods=['POST','GET'])
+@login_required
+def addSection():
+    sectionForm = addProductForm.SectionForm()
+    if sectionForm.validate_on_submit():
+        newSection = SectionModel(sectionKey = sectionForm.sectionName.data,
+                                  sectionValue = sectionForm.sectionName.data)
+        print('Adding section ........',newSection)
+    db.session.add(newSection)
+    db.session.commit()
+    return redirect(url_for('admin',message ="Section added!"))
 
 @app.route('/editCart/<kwargs>', methods=['POST'])
 @login_required
@@ -189,10 +210,10 @@ def productDetailView(productId):
     return render_template('productDetailView.html',productData=productData)
 
 ##Temp funtion to fix db anamolies
-def fix_db():
-    lemon = ProductModel.query.filter_by(productId=9).first()
-    lemon.productImage = 'static/lemon.jpg'
-    db.session.commit()
+# def fix_db():
+#     for  i in range(8,15):
+#         SectionModel.query.filter_by(sectionId = i).delete()
+#     db.session.commit()
 
 
 @app.route('/sections', methods=['GET'])
@@ -200,9 +221,10 @@ def fix_db():
 @login_required
 def sections(sectionCategory=None):
     print('Loading sections.........')
-    sectionsData = [sec.name for sec in Sections]
+    sectionsData = [sec.sectionValue.capitalize() for sec in SectionModel.query.all()]
+
     if(sectionCategory):
-        productDataArray = ProductModel.query.filter_by(section = sectionCategory)
+        productDataArray = ProductModel.query.filter_by(section = sectionCategory.lower())
         return render_template('sections.html',productDataArray = productDataArray,sections = sectionsData,sectionCategory=sectionCategory)
 
     productDataArray = ProductModel.query.all()
@@ -214,8 +236,7 @@ def dashboard():
     cart_init()
     print('Dashboard')
     productDataArray = ProductModel.query.all()
-    productForm = addProductForm.ProductForm()
-    return render_template('dashboard.html', UserModel=current_user, productFormProp=productForm,productDataArray=productDataArray)
+    return render_template('dashboard.html', UserModel=current_user, productDataArray=productDataArray)
 
 
 @app.route('/logout', methods=['POST', 'GET'])
@@ -224,6 +245,17 @@ def logout():
     print('Loging out.....')
     logout_user()
     return redirect(url_for('mainView'))
+
+
+
+@app.route('/admin', methods=['GET'])
+@app.route('/admin/<message>', methods=['GET'])
+@login_required
+def admin(message =None):
+    sections = [sec.sectionValue.capitalize() for sec  in SectionModel.query.all()]
+    addProduct = addProductForm.ProductForm()
+    sectionForm = addProductForm.SectionForm()
+    return render_template('admin.html',addProductForm = addProduct,sections = sections,sectionFormProps=sectionForm,message=message)
 
 
 
