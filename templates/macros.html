@@ -1,13 +1,19 @@
 {% macro regLoginForm(form) %}
-<div>
-  <form method="POST" action="{{form.action}}">
-    {{ form.csrf_token }} {{form.hidden_tag()}} {{form.username}}
-    {{form.password}} {{form.submit}}
- 
-  </form>
-{% if form.errors%}
-  {{form.errors}}
-{% endif %}
-</div>
-{% endmacro %}
 
+<form
+  method="POST"
+  action="{{form.action}}"
+  style="
+    display: flex;
+    height: 9rem;
+    width: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+  "
+>
+  {{ form.csrf_token }} {{form.hidden_tag()}}
+  <div>{{form.username(style="width:100%")}}</div>
+  <div>{{form.password(style="width:100%")}}</div>
+  <div>{{form.submit(style="width:100%")}}</div>
+</form>
+{% if form.errors%} {{form.errors}} {% endif %} {% endmacro %}

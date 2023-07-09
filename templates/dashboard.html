@@ -1,9 +1,10 @@
 {% from 'productMacro.html' import productForm,productCard %} 
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %} 
+{% block content %}
 
-<h6>Welcome {{current_user.username}}</h6>
+<h6 style="color: antiquewhite;">Welcome {{current_user.username}}</h6>
 
-<div class="row" style="display:flex;flex-direction:row;flex-wrap: nowrap; overflow: scroll">
+<div class="row" style="display:flex;flex-direction:row;flex-wrap: nowrap; overflow-x: scroll">
   {% for productData in productDataArray %}
   <div >{{productCard(productData)}}</div>
   {% endfor %}

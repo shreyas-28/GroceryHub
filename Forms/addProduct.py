@@ -14,9 +14,8 @@ class ProductForm(FlaskForm):
         min=4, max=80)], render_kw={"placeholder": "Image"})
     manufacturingDate = DateField(label='Manufacuring Date',validators=[DataRequired()])
     expiryDate = DateField(label='Manufacuring Date',validators=[DataRequired()])
-    quantityInStore = IntegerField(label='Total quantity',validators=[InputRequired()])
-    valuePerUnit = FloatField(label='Cost/Unit',validators=[InputRequired()])
-    section = StringField(validators=[InputRequired(), Length(
-        min=4, max=20)], render_kw={"placeholder": "Section of the product"})
+    quantityInStore = IntegerField('Total quantity',validators=[InputRequired()])
+    valuePerUnit = FloatField('Cost/Unit',validators=[InputRequired()])
+    section = SelectField("Section", choices=[(choice.name, choice.value) for choice in Sections])
     submit = SubmitField("Add Product")
     action = "/addProduct.html"

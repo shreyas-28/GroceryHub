@@ -1,17 +1,40 @@
-{% from "macros.html" import regLoginForm %} {% extends "base.html" %}
-{% block content%}
+{% from "macros.html" import regLoginForm %} {% extends "base.html" %} {% block
+content%}
 <body>
-  <h1>Welcome to Grocery Hub</h1>
   {% if error %}
-  <div class="alert alert-warning" role="alert">
-    {{error}}
-  </div>
+  <div class="alert alert-warning" role="alert">{{error}}</div>
   {% endif %}
-  <h3></h3>
-  <form method="post" action="/">
-    <input type="submit" value="Login" name="loginAction"/>
-    <input type="submit" value="Register" name="registerAction" />
-  </form>
-  {{regLoginForm(form)}}
+  <div
+    style="
+      height: 20rem;
+      width: 30rem;
+      display: flex;
+      flex-direction: column;
+      padding: 2rem;
+      border-radius: 1rem;
+      background-color: aliceblue;
+      margin: 15rem 10rem 0 33rem;
+      align-items: center;
+      justify-content: center;
+    "
+  >
+    <div style="margin-bottom: 2rem; width: 100%">
+      <form method="post" action="/">
+        <input
+          style="width: 45%; height: 3rem"
+          type="submit"
+          value="Login"
+          name="loginAction"
+        />
+        <input
+          style="width: 45%; margin-left: 2.2rem; height: 3rem"
+          type="submit"
+          value="Register"
+          name="registerAction"
+        />
+      </form>
+    </div>
+    {{regLoginForm(form)}}
+  </div>
 </body>
 {% endblock %}

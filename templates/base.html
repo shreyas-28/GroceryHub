@@ -21,6 +21,7 @@
   >
     <div style="margin: 0 10rem 0 10rem; display: flex; flex-direction: row">
       <a class="navbar-brand" href="{{url_for('dashboard')}}">GroceryHub</a>
+      {% if current_user.is_authenticated %}
       <button
         class="navbar-toggler"
         type="button"
@@ -43,6 +44,10 @@
           <li class="nav-item">
             <a class="nav-link" href="{{url_for('cart')}}">My Cart</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{url_for('sections')}}">Sections</a>
+          </li>
+
           <form class="form-inline my-2 my-lg-0">
             <input
               class="form-control mr-sm-2"
@@ -54,15 +59,19 @@
               Search
             </button>
           </form>
-          <li class="nav-item" style="margin-left:40rem">
+          <li class="nav-item" style="margin-left: 40rem">
             <a class="nav-link" href="{{url_for('logout')}}">Logout</a>
           </li>
         </ul>
       </div>
     </div>
+    {% endif %}
   </nav>
-  <body >
-    <div style="margin:0 10rem 0 10rem">
+  <body
+    background="{{ url_for('static', filename='mainBG.jpeg') }}"
+    style="height: 100%; background-repeat: no-repeat; background-size: cover"
+  >
+    <div style="margin: 2rem 10rem 0 10rem">
       {% block content %}{% endblock %}
     </div>
   </body>
