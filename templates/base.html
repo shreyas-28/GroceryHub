@@ -51,7 +51,11 @@
           <li class="nav-item">
             <a class="nav-link" href="{{url_for('admin')}}">Admin control</a>
           </li>
-          {% endif %} {% block navContent %} {% endblock %}
+          {% elif current_user.isManager %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{url_for('admin')}}">Manager control</a>
+          </li>
+          {% endif %}
 
           <form class="form-inline my-2 my-lg-0">
             <input

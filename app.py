@@ -6,6 +6,7 @@ from wtforms.validators import ValidationError
 from Models.mainModel import db
 from Models.userModel import UserModel
 from Models.productModel import ProductModel,Cart, SectionModel
+from Models.ticketModel import TicketModel
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
 
@@ -28,7 +29,7 @@ def load_user(user_id):
 
 def cart_init():
     print('fixing_db')
-    # fix_db()
+    fix_db()
     cart = Cart.query.filter_by(userId = current_user.uuid).first()
     print('cart',cart)
     print("Initialising app......")
@@ -86,14 +87,22 @@ def login():
             username=loginForm.username.data).first()
         if user:
             isAdmin = len(request.form.getlist('isAdmin'))
-            if isAdmin and not user.isAdmin:
-                return redirect(url_for('mainView',error = "Not admin login"))
-            if not isAdmin and user.isAdmin:
-                return redirect(url_for('mainView',error = "Admin login! Use correct form."))
+            isManager = len(request.form.getlist('isManager'))
+            if isAdmin:
+                if isAdmin and not user.isAdmin:
+                    return redirect(url_for('mainView',error = "Not admin login"))
+                if not isAdmin and user.isAdmin:
+                    return redirect(url_for('mainView',error = "Admin login! Use correct form."))
+            if isManager:
+                if isManager and not user.isManager:
+                    return redirect(url_for('mainView',error = "Not manager login"))
+                if not isManager and user.isManager:
+                    return redirect(url_for('mainView',error = "Manager login! Use correct form."))
+
             if (bcrypt.check_password_hash(user.password, loginForm.password.data)):
                 print(user)
                 login_user(user)
-            print("Cart checking")
+            print("Cart checking....")
             cart_init()
         return redirect(url_for('dashboard'))
     error = "Invalid Username or Password"
@@ -138,19 +147,64 @@ def addProduct():
         print("Adding new product",new_product)
         db.session.add(new_product)
         db.session.commit()
-    return redirect(url_for('dashboard'))
+    return redirect(url_for('admin',message="Added " + new_product.productName))
 
-@app.route('/addSection.html', methods=['POST','GET'])
+@app.route("/raiseTicket.html", methods=['POST'])
+def raiseTicket():
+    ticketForm = loginForms.TicketForm()
+    if ticketForm.validate_on_submit():
+        
+        newTicket = TicketModel(ticketRequest = ticketForm.ticketRequest.data,
+                                ticketTarget = ticketForm.ticketTarget.data,
+                                ticketDetails = ticketForm.ticketDetails.data,
+                                ticketRaisedBy = current_user.uuid)
+        print("Adding ticket",newTicket)
+        db.session.add(newTicket)
+        db.session.commit()
+        return redirect(url_for('admin',message = "Successfully raised a ticket!"))
+    
+@app.route("/handleTicket.html/<ticketId>", methods=['POST'])
+def handleTicket(ticketId):
+    return redirect(url_for('admin',message='Ticket closed!'))
+        
+
+@app.route('/editSection.html/<kwargs>', methods=['POST','GET'])
 @login_required
-def addSection():
+def editSection(kwargs):
     sectionForm = addProductForm.SectionForm()
-    if sectionForm.validate_on_submit():
-        newSection = SectionModel(sectionKey = sectionForm.sectionName.data,
-                                  sectionValue = sectionForm.sectionName.data)
-        print('Adding section ........',newSection)
-    db.session.add(newSection)
-    db.session.commit()
-    return redirect(url_for('admin',message ="Section added!"))
+    kwargs = eval(kwargs)
+    action = kwargs['action']
+    match action:
+        case 'add':
+            if sectionForm.validate_on_submit():
+                if sectionForm.sectionName.data != sectionForm.sectionName.data.capitalize():
+                    return redirect(url_for('admin',message ="Section name should start with a capital letter."))
+                newSection = SectionModel(sectionKey = sectionForm.sectionName.data,
+                                        sectionValue = sectionForm.sectionName.data)
+                print('Adding section ........',newSection)
+                db.session.add(newSection)
+                db.session.commit()
+                return redirect(url_for('admin',message ="Section added!"))
+        case 'remove':
+            sectionToRemove = request.form['sectionToRemove']
+            if current_user.isAdmin:
+                SectionModel.query.filter_by(sectionKey = sectionToRemove.lower()).delete()
+                ##Removing this section from all the products and marking them as "other"
+                products = ProductModel.query.filter_by(section = sectionToRemove)
+                for product in products:
+                    product.section = 'others'
+                db.session.commit()
+                return redirect(url_for('admin',message=sectionToRemove+" removed seccesfully"))
+        case 'edit':
+            if sectionForm.validate_on_submit():
+                print("Editting a section ..............")
+                sectionToEdit = SectionModel.query.filter_by(sectionKey = request.form['sectionToEdit']).first()
+                sectionToEdit.sectionKey,sectionToEdit.sectionValue = sectionForm.editSectionName.data,sectionForm.editSectionName.data
+                db.session.commit()
+                return redirect(url_for('admin',message=  "Section editted successfully!"))
+    return redirect(url_for('admin',message="Error! Try again later."))
+
+
 
 @app.route('/editCart/<kwargs>', methods=['POST'])
 @login_required
@@ -186,6 +240,8 @@ def editCart(kwargs):
     if 'origin' in kwargs.keys():
         if(kwargs['origin'] =='cart'):
             return redirect(url_for('cart'))
+        elif(kwargs['origin'] == 'detailView'):
+            return redirect(url_for('productDetailView',productId=kwargs['productId']))
     return redirect(url_for('dashboard'))
 
 @app.route('/cart', methods=['POST', 'GET'])
@@ -210,10 +266,16 @@ def productDetailView(productId):
     return render_template('productDetailView.html',productData=productData)
 
 ##Temp funtion to fix db anamolies
-# def fix_db():
-#     for  i in range(8,15):
-#         SectionModel.query.filter_by(sectionId = i).delete()
-#     db.session.commit()
+def fix_db():
+    return None
+    # for  i in range(8,15):
+    #     SectionModel.query.filter_by(sectionId = i).delete()
+    # db.session.commit()
+    # hair = SectionModel.query.filter_by(sectionKey = 'Others').first()
+    # hair.sectionKey = 'Personal Care'
+    # hair.sectionValue = 'Personal Care'
+    # db.session.commit()
+
 
 
 @app.route('/sections', methods=['GET'])
@@ -253,9 +315,13 @@ def logout():
 @login_required
 def admin(message =None):
     sections = [sec.sectionValue.capitalize() for sec  in SectionModel.query.all()]
+    raisedTickets = TicketModel.query.all()
+    for ticket in raisedTickets:
+        ticket.raisedBy = UserModel.query.filter_by(uuid = ticket.ticketRaisedBy).first().username
     addProduct = addProductForm.ProductForm()
     sectionForm = addProductForm.SectionForm()
-    return render_template('admin.html',addProductForm = addProduct,sections = sections,sectionFormProps=sectionForm,message=message)
+    raiseTicketForm = loginForms.TicketForm()
+    return render_template('adminManager.html',addProductForm = addProduct,sections = sections,sectionFormProps=sectionForm,message=message,raiseTicketForm=raiseTicketForm,raisedTickets=raisedTickets)
 
 
 

@@ -16,19 +16,20 @@
   <div>{{form.password(style="width:100%")}}</div>
   <div>
     <input type="radio" name="isAdmin" id="isAdmin" value="Yes"> Admin Login? </input>
+    <input type="radio" name="isManager" id="isManager" value="Yes"> Manager Login? </input>
   </div>
   <div>{{form.submit(style="width:100%")}}</div>
 </form>
 {% if form.errors%} {{form.errors}} {% endif %} {% endmacro %}
 
 
-{% macro sectionForm(form) %}
+{% macro sectionForm(form,sections) %}
+<h6 style="color: antiquewhite">Add a new section</h6>
 <form
   method="POST"
-  action="{{form.action}}"
+  action="{{url_for('editSection',kwargs={'action':'add'})}}"
   style="
     display: flex;
-    height: 9rem;
     width: 100%;
     flex-direction: column;
     justify-content: space-between;
@@ -40,4 +41,76 @@
     {{form.submit}}
   </div>
 </form>
+<h6 style="color: antiquewhite">Edit section</h6>
+<form
+  method="POST"
+  action="{{url_for('editSection',kwargs={'action':'edit'})}}"
+  style="
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+    "
+    >
+  {{form.csrf_token}}
+  <div>
+    <select name="sectionToEdit" id="sectionToEdit">
+      {% for sec in sections %}
+      <option value="{{ sec }}" SELECTED>{{ sec }}</option>
+      {% endfor %}     
+    </select>
+    {{form.editSectionName}}
+    {{form.submitEdit}}
+  </div>
+  </form>
+{% endmacro %}
+
+
+{% macro ticketForm(form) %}
+<h6 style="color: antiquewhite">Raise a ticket</h6>
+<form
+  method="POST"
+  action="{{url_for('raiseTicket')}}"
+  style="
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+  "
+>
+  {{ form.csrf_token }} 
+  <div>
+    {{form.ticketRequest}}  
+    {{form.ticketTarget}}
+    {{form.ticketDetails}}
+    {{form.submit}}
+  </div>
+</form>
+{% endmacro %}
+
+{% macro adminTicketView(ticket) %}
+<style>
+  h6{
+    color:whitesmoke
+  }
+
+</style>
+<div style="
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+  ">
+    <h6>{{ticket.ticketRequest}}</h6>
+    <h6>{{ticket.ticketTarget}}</h6>
+    <h6>{{ticket.ticketDetails}}</h6>
+    <h6>{{ticket.raisedBy}}</h6>
+    <form
+    method="POST"
+    action="{{url_for('handleTicket',ticketId = ticket.ticketId)}}"
+  >
+    <input type="submit" name="Accept" value="Accept" id="response" />
+    <input type="submit" name="Deny" value="Deny" id="response" />
+  </form>
+  </div>
 {% endmacro %}

@@ -1,5 +1,5 @@
-{% macro cartControlUtil(quantityInCart,productId,origin="")%}
-{% if origin == "cart"%}
+{% macro cartControlUtil(quantityInCart,productId,origin="")%} {% if origin ==
+"cart"%}
 <div
   style="
     height: 2rem;
@@ -7,158 +7,103 @@
     flex-direction: row;
     justify-content: space-between;
     margin-top: 0.25rem;
-    width:8rem;
+    width: 8rem;
   "
 >
-{% else %}
-<div
-  style="
-    height: 2rem;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-top: 0.25rem;
-  "
->
-{% endif %}
-  <form
-    method="post"
-    action="{{url_for('editCart',kwargs ={'productId':productId,'action':'remove','origin':origin})}}"
-    type="button"
-    class="btn btn-secondary"
+  {% else %}
+  <div
+    style="
+      height: 2rem;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-top: 0.25rem;
+    "
   >
-    <input type="submit" value="<" name="<" style="all: unset" />
-  </form>
-  <h6>{{quantityInCart}}</h6>
-  <form
-    method="post"
-    action="{{url_for('editCart',kwargs ={'productId':productId,'origin':origin})}}"
-    type="button"
-    class="btn btn-secondary"
-  >
-    <input type="submit" value=">" name=">" style="all: unset" />
-  </form>
-</div>
-<div>
-  <form
-    method="post"
-    action="{{url_for('editCart',kwargs ={'productId':productId,'action':'clean','origin':origin})}}"
-    type="button"
-    class="btn btn-secondary"
-    style="margin-top: 0.25rem; width: 100%"
-  >
-    <input
-      type="submit"
-      value="Remove all"
-      name="Remove all"
-      style="all: unset"
-    />
-  </form>
-</div>
-
-{% endmacro %} {% macro productForm(form,sections) %}
-<div>
-  <form method="POST" action="{{form.action}}">
-    {{ form.csrf_token }} {{form.hidden_tag()}} {{form.productName}}
-    {{form.productImage}}{{form.manufacturingDate}}{{form.expiryDate}}{{form.quantityInStore}}
-    {{form.valuePerUnit}}
-    <select name="section" id="section">
-      {% for sec in sections %}
-      <option value="{{ sec }}" SELECTED>{{ sec }}</option>
-      {% endfor %}     
-    </select>
-    {{form.submit}}
-  </form>
-</div>
-{% endmacro %} {% macro productCard(productData) %}
-<div
-  class="card"
-  style="
-    height: 350px;
-    width: 12rem;
-    background-color: #17a2b8 !important;
-    margin: 0.25rem 0.25rem;
-  "
->
-  <div class="card-body" styles="display:flex !important; flex-direction:row;">
-    <h5 class="card-title" styles="font-size:1vw">
-      {{productData.productName}}
-    </h5>
-    <h6 styles="font-size:0.75vw">{{productData.valuePerUnit}} Rs</h6>
+    {% endif %}
+    <form
+      method="post"
+      action="{{url_for('editCart',kwargs ={'productId':productId,'action':'remove','origin':origin})}}"
+      type="button"
+      class="btn btn-secondary"
+    >
+      <input type="submit" value="<" name="<" style="all: unset" />
+    </form>
+    <h6>{{quantityInCart}}</h6>
+    <form
+      method="post"
+      action="{{url_for('editCart',kwargs ={'productId':productId,'origin':origin})}}"
+      type="button"
+      class="btn btn-secondary"
+    >
+      <input type="submit" value=">" name=">" style="all: unset" />
+    </form>
   </div>
-  <img
-    class="card-img-top"
-    src="{{productData.productImage}}"
-    alt="Card image cap"
-    style="height: 10rem"
-  />
-  <a
-    href="{{url_for('productDetailView',productId=productData.productId)}}"
-    style="position: absolute; right: 1rem; top: 0.5rem; color: white"
-  >
-    <span class="material-symbols-outlined"> info </span>
-  </a>
-  {% if productData.quantityInCart %}
-  {{cartControlUtil(productData.quantityInCart,productData.productId)}} {% else
-  %}
-  <form
-    method="post"
-    action="{{url_for('editCart',kwargs ={'productId':productData.productId})}}"
-    type="button"
-    class="btn btn-secondary"
-  >
-    <input
-      type="submit"
-      value="Add to cart"
-      name="Add to cart"
-      style="all: unset"
-    />
-  </form>
-  {% endif %}
-</div>
-{% endmacro %} 
-{% macro productCartView(productData,quantity) %}
-<li
-  class="list-group-item"
-  style="
-    height: 4rem;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    margin-top: 0.5rem;
-    align-items: center;
-  "
->
-  <img
-    style="max-width: 100%; max-height: 100% "
-    src="{{productData.productImage}}"
-  />
   <div>
-    <h5>{{productData.productName}}</h5>
+    <form
+      method="post"
+      action="{{url_for('editCart',kwargs ={'productId':productId,'action':'clean','origin':origin})}}"
+      type="button"
+      class="btn btn-secondary"
+      style="margin-top: 0.25rem; width: 100%"
+    >
+      <input
+        type="submit"
+        value="Remove all"
+        name="Remove all"
+        style="all: unset"
+      />
+    </form>
   </div>
-  <h6>{{productData.valuePerUnit}} Rs</h6>
-  <h6>{{quantity}}</h6>
-  {{cartControlUtil(productData.quantityInCart,productData.productId,'cart')}}
-  <h6>{{quantity*productData.valuePerUnit}} Rs</h6>
-</li>
-{% endmacro %} {% macro productDetailView(productData) %}
-<div
-  style="
-    height: 30rem;
-    display: flex;
-    padding: 0rem 2rem 0rem 2rem;
-    flex-direction: row;
-  "
->
-  <img
-    style="max-width: 100%; max-height: 100%; margin-right: 10rem"
-    src="{{productData.productImage}}"
-  />
-  <div style="align-self: center">
-    <h5>{{productData.productName}}</h5>
-    <h6>{{productData.valuePerUnit}} Rs</h6>
-    <h6>{{productData.quantityInCart}}</h6>
-    <h6>{{productData.quantityInCart*productData.valuePerUnit}} Rs</h6>
+
+  {% endmacro %} {% macro productForm(form,sections) %}
+  <div>
+    <form method="POST" action="{{form.action}}">
+      {{ form.csrf_token }} {{form.hidden_tag()}} {{form.productName}}
+      {{form.productImage}}{{form.manufacturingDate}}{{form.expiryDate}}{{form.quantityInStore}}
+      {{form.valuePerUnit}}
+      <select name="section" id="section">
+        {% for sec in sections %}
+        <option value="{{ sec }}" selected>{{ sec }}</option>
+        {% endfor %}
+      </select>
+      {{form.submit}}
+    </form>
+  </div>
+  {% endmacro %} {% macro productCard(productData) %}
+  <div
+    class="card"
+    style="
+      height: 350px;
+      width: 12rem;
+      background-color: #17a2b8 !important;
+      margin: 0.25rem 0.25rem;
+    "
+  >
+    <div
+      class="card-body"
+      styles="display:flex !important; flex-direction:row;"
+    >
+      <h5 class="card-title" styles="font-size:1vw">
+        {{productData.productName}}
+      </h5>
+      <h6 styles="font-size:0.75vw">{{productData.valuePerUnit}} Rs</h6>
+    </div>
+    <img
+      class="card-img-top"
+      src="{{productData.productImage}}"
+      alt="Card image cap"
+      style="height: 10rem"
+    />
+    <a
+      href="{{url_for('productDetailView',productId=productData.productId)}}"
+      style="position: absolute; right: 1rem; top: 0.5rem; color: white"
+    >
+      <span class="material-symbols-outlined"> info </span>
+    </a>
+    {% if productData.quantityInCart %}
+    {{cartControlUtil(productData.quantityInCart,productData.productId)}} {%
+    else %}
     <form
       method="post"
       action="{{url_for('editCart',kwargs ={'productId':productData.productId})}}"
@@ -172,6 +117,76 @@
         style="all: unset"
       />
     </form>
+    {% endif %}
   </div>
+  {% endmacro %} {% macro productCartView(productData,quantity) %}
+  <li
+    class="list-group-item"
+    style="
+      height: 4rem;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-evenly;
+      margin-top: 0.5rem;
+      align-items: center;
+    "
+  >
+    <img
+      style="max-width: 100%; max-height: 100%"
+      src="{{productData.productImage}}"
+    />
+    <div>
+      <h5>{{productData.productName}}</h5>
+    </div>
+    <h6>{{productData.valuePerUnit}} Rs</h6>
+    <h6>{{quantity}}</h6>
+    {{cartControlUtil(productData.quantityInCart,productData.productId,'cart')}}
+    <h6>{{quantity*productData.valuePerUnit}} Rs</h6>
+  </li>
+  {% endmacro %} {% macro productDetailView(productData) %}
+  <style>
+    h5 {
+      color: whitesmoke;
+    }
+    h6 {
+      color: whitesmoke;
+    }
+  </style>
+  <div
+    style="
+      height: 30rem;
+      display: flex;
+      padding: 0rem 2rem 0rem 2rem;
+      flex-direction: row;
+    "
+  >
+    <img
+      style="max-width: 100%; max-height: 100%; margin-right: 10rem"
+      src="{{productData.productImage}}"
+    />
+    <div style="align-self: center">
+      <h5>{{productData.productName}}</h5>
+      <h6>{{productData.valuePerUnit}} Rs per unit</h6>
+      <h6>Section : {{productData.section}}</h6>
+      <h6>Total for this item : {{productData.quantityInCart*productData.valuePerUnit}} Rs</h6>
+      {% if productData.quantityInCart %}
+      {{cartControlUtil(productData.quantityInCart,productData.productId,origin = 'detailView')}} {%
+      else %}
+      <form
+        method="post"
+        action="{{url_for('editCart',kwargs ={'productId':productData.productId,'origin':'detailView'})}}"
+        type="button"
+        class="btn btn-secondary"
+      >
+        <input
+          type="submit"
+          value="Add to cart"
+          name="Add to cart"
+          style="all: unset"
+        />
+      </form>
+      {% endif %}
+    </div>
+  </div>
+  {% endmacro %}
 </div>
-{% endmacro %}

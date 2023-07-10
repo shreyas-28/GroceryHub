@@ -22,8 +22,8 @@ class ProductForm(FlaskForm):
 
 
 class SectionForm(FlaskForm):
-        sectionName = StringField(validators=[InputRequired(), Length(
-        min=4, max=20)], render_kw={"placeholder": "Name of the section"})
-        action ="/addSection.html"
+        sectionName = StringField(render_kw={"placeholder": "Name of the section"})
         submit = SubmitField("Add Section")
+        editSectionName = StringField(render_kw={"placeholder": "Edit section name"})
+        submitEdit = SubmitField("Edit Section")
 
