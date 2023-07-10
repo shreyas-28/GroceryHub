@@ -164,6 +164,7 @@ def raiseTicket():
         return redirect(url_for('admin',message = "Successfully raised a ticket!"))
     
 @app.route("/handleTicket.html/<ticketId>", methods=['POST'])
+##TODO: write handle ticket logic
 def handleTicket(ticketId):
     return redirect(url_for('admin',message='Ticket closed!'))
         
