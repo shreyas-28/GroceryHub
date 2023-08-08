@@ -42,18 +42,18 @@
             >
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{url_for('cart')}}">My Cart</a>
+            <a class="nav-link" href="{{url_for('cart')}}"> Cart</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{url_for('sections')}}">Sections</a>
           </li>
           {% if current_user.isAdmin %}
           <li class="nav-item">
-            <a class="nav-link" href="{{url_for('admin')}}">Admin control</a>
+            <a class="nav-link" href="{{url_for('admin')}}">Admin </a>
           </li>
           {% elif current_user.isManager %}
           <li class="nav-item">
-            <a class="nav-link" href="{{url_for('admin')}}">Manager control</a>
+            <a class="nav-link" href="{{url_for('admin')}}">Manager </a>
           </li>
           {% endif %}
 
@@ -68,7 +68,7 @@
               Search
             </button>
           </form>
-          <li class="nav-item" style="margin-left: 40rem">
+          <li class="nav-item" style="margin-left: 30rem">
             <a class="nav-link" href="{{url_for('logout')}}">Logout</a>
           </li>
         </ul>

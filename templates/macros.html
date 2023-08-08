@@ -24,7 +24,6 @@
 
 
 {% macro sectionForm(form,sections) %}
-<h6 style="color: antiquewhite">Add a new section</h6>
 <form
   method="POST"
   action="{{url_for('editSection',kwargs={'action':'add'})}}"
@@ -41,7 +40,6 @@
     {{form.submit}}
   </div>
 </form>
-<h6 style="color: antiquewhite">Edit section</h6>
 <form
   method="POST"
   action="{{url_for('editSection',kwargs={'action':'edit'})}}"
@@ -67,7 +65,7 @@
 
 
 {% macro ticketForm(form) %}
-<h6 style="color: antiquewhite">Raise a ticket</h6>
+<h6 style="color: rgb(86, 86, 86)">Raise a ticket</h6>
 <form
   method="POST"
   action="{{url_for('raiseTicket')}}"
@@ -91,7 +89,7 @@
 {% macro adminTicketView(ticket) %}
 <style>
   h6{
-    color:whitesmoke
+    color:rgb(86, 86, 86)
   }
 
 </style>
@@ -107,10 +105,15 @@
     <h6>{{ticket.raisedBy}}</h6>
     <form
     method="POST"
-    action="{{url_for('handleTicket',ticketId = ticket.ticketId)}}"
+    action="{{url_for('handleTicket',kwargs = {'ticketId' : ticket.ticketId,'approved':True})}}"
   >
-    <input type="submit" name="Accept" value="Accept" id="response" />
-    <input type="submit" name="Deny" value="Deny" id="response" />
-  </form>
-  </div>
+  <input type="submit" name="Accept" value="Accept" id="response" />
+</form>
+<form
+    method="POST"
+    action="{{url_for('handleTicket',kwargs = {'ticketId' : ticket.ticketId,'approved':False})}}"
+  >
+<input type="submit" name="Deny" value="Deny" id="response" />
+</form>
+</div>
 {% endmacro %}

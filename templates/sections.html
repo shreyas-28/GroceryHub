@@ -1,41 +1,45 @@
-{% from 'productMacro.html' import productCard %} 
-{% extends "base.html" %}
-{% block content %}
-<div style="display:flex;flex-direction: row;justify-content: space-between;margin-bottom: 2rem;">
-    <div class="dropdown show">
-  <a
-    class="btn btn-secondary dropdown-toggle"
-    href="#"
-    role="button"
-    id="dropdownMenuLink"
-    data-toggle="dropdown"
-    aria-haspopup="true"
-    aria-expanded="false"
-  >
-    Explore sections
-  </a>
-
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-    {% for section in sections %}
-    <a
-      class="dropdown-item"
-      href='{{url_for("sections",sectionCategory = section)}}'
-      >{{section.capitalize()}}</a
-    >
-    {% endfor %}
-    <a class="dropdown-item" href='{{url_for("sections")}}'> View all </a>
-  </div>
-</div>
-{% if sectionCategory %}
-<h6 style="color: antiquewhite;">{{sectionCategory.capitalize()}}</h6>
-{% else %}
-<h6 style="color: antiquewhite;">Viewing all</h6>
-{% endif %}
-</div>
-
+{% from 'productMacro.html' import productCard %} {% extends "base.html" %} {%
+block content %}
 <div
-  class="row"
+  style="
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  "
 >
+  <div class="dropdown show">
+    <a
+      class="btn btn-secondary dropdown-toggle"
+      href="#"
+      role="button"
+      id="dropdownMenuLink"
+      data-toggle="dropdown"
+      aria-haspopup="true"
+      aria-expanded="false"
+    >
+      Explore sections
+    </a>
+
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+      {% for section in sections %}
+      <a
+        class="dropdown-item"
+        href='{{url_for("sections",sectionCategory = section)}}'
+        >{{section.capitalize()}}</a
+      >
+      {% endfor %}
+      <a class="dropdown-item" href='{{url_for("sections")}}'> View all </a>
+    </div>
+  </div>
+  {% if sectionCategory %}
+  <h6 style="color: rgb(86, 86, 86)">{{sectionCategory.capitalize()}}</h6>
+  {% else %}
+  <h6 style="color: rgb(86, 86, 86)">Viewing all</h6>
+  {% endif %}
+</div>
+
+<div class="row">
   {% for product in productDataArray %} {{productCard(product)}} {% endfor %}
 </div>
 {% endblock %}

@@ -11,8 +11,8 @@
     "
   >
     <h6>Product</h6>
-      <h6>Value</h6>
-      <h6>Quantity</h6>
+    <h6>Value</h6>
+    <h6>Quantity</h6>
     <h6>Value for the item</h6>
   </li>
 
@@ -20,26 +20,25 @@
   <div class="alert alert-warning" role="alert" style="margin-top: 2.5rem">
     Nothing in the cart.
   </div>
-  {% else %} 
-  {% for product in cartDataProp %} 
-    {% if cartDataProp[product]>0%}
-      {{productCartView(product,cartDataProp[product])}}
-    {% endif %} 
-  {% endfor %} 
+  {% else %} {% for product in cartDataProp %} {% if cartDataProp[product]>0%}
+  {{productCartView(product,cartDataProp[product])}} {% endif %} {% endfor %}
   <li
     class="list-group-item"
     style="
-      margin-top:0.5rem;
+      margin-top: 0.5rem;
       height: 3rem;
       display: flex;
       flex-direction: row;
       justify-content: space-between;
     "
   >
-  <h6>Total</h6>
-    <h6 style="margin-right:4.25rem">{{totalValue}} Rs.</h6>
+    <h6>Total</h6>
+    <h6 style="margin-right: 4.25rem">{{totalValue}} Rs.</h6>
   </li>
 
   {% endif %}
 </ul>
+<form method="POST" action="{{url_for('handleBuyNow')}}">
+  <input type="submit" name="Buy Now" value="Buy Now" />
+</form>
 {% endblock %}

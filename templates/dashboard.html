@@ -1,10 +1,19 @@
 {% from 'productMacro.html' import productForm,productCard %} {% extends
-"base.html" %} {% block content %}
-<h6 style="color: antiquewhite">Welcome {{current_user.username}}</h6>
+"base.html" %} {% block content %} {% if message %}
+<div class="alert alert-warning" role="alert">{{message}}</div>
+{% endif %}
+<h5 style="color: rgb(86, 86, 86)">Welcome {{current_user.username}}</h6>
 
-<div
-  class="row"
->
+<h6 style="color: rgb(86, 86, 86)">Fresh in store</h6>
+<div class="row">
+  {% for productData in freshProducts %}
+  <div>{{productCard(productData)}}</div>
+  {% endfor %}
+</div>
+
+<hr class="hr hr-blurry" />
+
+<div class="row">
   {% for productData in productDataArray %}
   <div>{{productCard(productData)}}</div>
   {% endfor %}

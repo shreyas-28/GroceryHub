@@ -1,30 +1,42 @@
-{% extends "base.html" %} {% from 'productMacro.html' import productForm %} {%
-from 'macros.html' import sectionForm,ticketForm, adminTicketView %} {% block
-content %} {% if message %}
+{% extends "base.html" %} {% from 'productMacro.html' import
+productForm,editProductForm %} {% from 'macros.html' import
+sectionForm,ticketForm, adminTicketView %} {% block content %} {% if message %}
 <div class="alert alert-warning" role="alert">{{message}}</div>
 {% endif %} {% if current_user.isAdmin %}
-<h4 style="color: antiquewhite">Admin View only</h4>
+<h4 style="color: rgb(86, 86, 86)">Admin View only</h4>
 {% else %}
-<h4 style="color: antiquewhite">Manager View only</h4>
+<h4 style="color: rgb(86, 86, 86)">Manager View only</h4>
 {% endif %}
 <br />
-<h6 style="color: antiquewhite">Add a new product</h6>
+<h6 style="color: rgb(86, 86, 86)">Add a new product</h6>
 {{productForm(addProductForm,sections)}}
+
+<hr class="hr hr-blurry" />
+<h6 style="color: rgb(86, 86, 86)">Edit product</h6>
+{{editProductForm(productEditForm,productsList)}}
 <br />
-{{sectionForm(sectionFormProps,sections)}} {% if current_user.isAdmin %}
-<h6 style="color: antiquewhite">Remove a section</h6>
-<form
-  method="POST"
-  action="{{url_for('editSection',kwargs={'action':'remove'})}}"
->
-  <select name="sectionToRemove" id="sectionToRemove">
-    {% for sec in sections %}
-    <option value="{{ sec }}" selected>{{ sec }}</option>
-    {% endfor %}
-  </select>
-  <input type="submit" name="Submit" value="Submit" />
-</form>
+<hr class="hr hr-blurry" />
+<div style="display: flex; justify-content: space-between">
+  <h6 style="color: rgb(86, 86, 86)">Add a new section</h6>
+  <h6 style="color: rgb(86, 86, 86)">Edit section</h6>
+  <h6 style="color: rgb(86, 86, 86)">Remove a section</h6>
+</div>
+<div style="display: flex; flex-direction: row; justify-content: space-between">
+  {{sectionForm(sectionFormProps,sections)}} {% if current_user.isAdmin %}
+  <form
+    method="POST"
+    action="{{url_for('editSection',kwargs={'action':'remove'})}}"
+    style="display: flex; flex-direction: row"
+  >
+    <select name="sectionToRemove" id="sectionToRemove">
+      {% for sec in sections %}
+      <option value="{{ sec }}" selected>{{ sec }}</option>
+      {% endfor %}
+    </select>
+    <input type="submit" name="Submit" value="Submit" />
+  </form>
+</div>
 {% endif %} {% if current_user.isAdmin %}
-<h6 style="color: antiquewhite">Requests</h6>
+<h6 style="color: rgb(86, 86, 86)">Requests</h6>
 {% for ticket in raisedTickets %} {{adminTicketView(ticket)}} {% endfor %} {%
 else %} {{ticketForm(raiseTicketForm)}} {% endif %} {% endblock %}

@@ -57,7 +57,7 @@
   </div>
 
   {% endmacro %} {% macro productForm(form,sections) %}
-  <div>
+  <div style="display: flex; flex-direction: row">
     <form method="POST" action="{{form.action}}">
       {{ form.csrf_token }} {{form.hidden_tag()}} {{form.productName}}
       {{form.productImage}}{{form.manufacturingDate}}{{form.expiryDate}}{{form.quantityInStore}}
@@ -70,13 +70,31 @@
       {{form.submit}}
     </form>
   </div>
-  {% endmacro %} {% macro productCard(productData) %}
+  {% endmacro %} {% macro productCard(productData) %} {% if
+  productData.quantityInStore == 0 %}
   <div
     class="card"
     style="
       height: 350px;
       width: 12rem;
-      background-color: #17a2b8 !important;
+      background-color: #64cddd71 !important;
+      margin: 0.25rem 0.25rem;
+      position: absolute;
+      z-index: 1;
+      align-items: center;
+    "
+  >
+    <h5 style="margin-top: 9rem; background: white; width: 100%">
+      Out of Stock
+    </h5>
+  </div>
+  {% endif %}
+  <div
+    class="card"
+    style="
+      height: 350px;
+      width: 12rem;
+      background-color: #64cddd !important;
       margin: 0.25rem 0.25rem;
     "
   >
@@ -146,10 +164,10 @@
   {% endmacro %} {% macro productDetailView(productData) %}
   <style>
     h5 {
-      color: whitesmoke;
+      color: rgb(86, 86, 86);
     }
     h6 {
-      color: whitesmoke;
+      color: rgb(86, 86, 86);
     }
   </style>
   <div
@@ -168,10 +186,13 @@
       <h5>{{productData.productName}}</h5>
       <h6>{{productData.valuePerUnit}} Rs per unit</h6>
       <h6>Section : {{productData.section}}</h6>
-      <h6>Total for this item : {{productData.quantityInCart*productData.valuePerUnit}} Rs</h6>
+      <h6>
+        Total for this item :
+        {{productData.quantityInCart*productData.valuePerUnit}} Rs
+      </h6>
       {% if productData.quantityInCart %}
-      {{cartControlUtil(productData.quantityInCart,productData.productId,origin = 'detailView')}} {%
-      else %}
+      {{cartControlUtil(productData.quantityInCart,productData.productId,origin
+      = 'detailView')}} {% else %}
       <form
         method="post"
         action="{{url_for('editCart',kwargs ={'productId':productData.productId,'origin':'detailView'})}}"
@@ -190,3 +211,32 @@
   </div>
   {% endmacro %}
 </div>
+{% macro editProductForm(form,productsList) %}
+<form
+  method="POST"
+  action="{{url_for('editProduct')}}"
+  style="
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+  "
+>
+  <div style="display: flex; flex-direction: row">
+    <select name="productToEdit" id="productToEdit">
+      {% for product in productsList %}
+      <option value="{{ product.productName }}" selected>
+        {{ product.productName }}
+      </option>
+      {% endfor %}
+    </select>
+    {{form.productValue}}
+    <select name="productInStock" id="productInStock">
+      {% for stockValue in ['In stock','Out of stock'] %}
+      <option value="{{ stockValue }}" selected>{{ stockValue}}</option>
+      {% endfor %}
+    </select>
+    {{form.unitsInStock}} {{form.submitEdit}}
+  </div>
+</form>
+{% endmacro %}
