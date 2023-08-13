@@ -7,20 +7,20 @@ def cart_init(db, current_user):
     fix_db(db)
     cart = Cart.query.filter_by(userId=current_user.uuid).first()
     print('cart', cart)
-    print("Initialising app......")
+    print("Initialising app.")
     print("Clearing products data.....")
     productData = ProductModel.query.all()
     for product in productData:
         product.quantityInCart = 0
         db.session.commit()
-    print("Clearing cart data........")
+    print("Clearing cart data.")
     if not cart:
         print('Creating a new cart')
         new_cart = Cart(userId=current_user.uuid, totalValue=0, products={})
         db.session.add(new_cart)
         db.session.commit()
     else:
-        print("Loading older cart ..........")
+        print("Loading older cart.")
         cartData = cart.products
         if (cartData):
             for product in cartData:
