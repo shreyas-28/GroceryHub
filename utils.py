@@ -8,7 +8,7 @@ def cart_init(db, current_user):
     cart = Cart.query.filter_by(userId=current_user.uuid).first()
     print('cart', cart)
     print("Initialising app.")
-    print("Clearing products data.....")
+    print("Clearing products data.")
     productData = ProductModel.query.all()
     for product in productData:
         product.quantityInCart = 0
@@ -24,7 +24,7 @@ def cart_init(db, current_user):
         cartData = cart.products
         if (cartData):
             for product in cartData:
-                print("adding from older cart...", product)
+                print("adding from older cart.", product)
                 dbProduct = ProductModel.query.filter_by(
                     productId=int(product)).first()
                 dbProduct.quantityInCart = cartData[product]
