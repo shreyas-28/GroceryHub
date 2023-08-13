@@ -1,8 +1,11 @@
 {% from 'productMacro.html' import productForm,productCard %} {% extends
-"base.html" %} {% block content %} {% if message %}
+"base.html" %} {% block displayUserName %}
+<a class="nav-link" style="color: rgb(86, 86, 86)"
+  >Welcome {{current_user.username}}</a
+>
+{% endblock %} {% block content %} {% if message %}
 <div class="alert alert-warning" role="alert">{{message}}</div>
 {% endif %}
-<h5 style="color: rgb(86, 86, 86)">Welcome {{current_user.username}}</h6>
 
 <h6 style="color: rgb(86, 86, 86)">Fresh in store</h6>
 <div class="row">

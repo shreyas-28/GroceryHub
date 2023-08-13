@@ -1,14 +1,13 @@
 from .mainModel import db
 from .utilModel import MutableDict, JSONEncodedDict
 import sqlalchemy
-import enum
-from sqlalchemy import Enum
 
 
 class SectionModel(db.Model):
     sectionId = db.Column(db.Integer, primary_key=True)
     sectionKey = db.Column(db.String[120], nullable=False)
     sectionValue = db.Column(db.String[120], nullable=False)
+    engagement = db.Column(db.Integer)
 
 
 class ProductModel(db.Model):
@@ -22,6 +21,7 @@ class ProductModel(db.Model):
     valuePerUnit = db.Column(db.Float, nullable=False)
     quantityInCart = db.Column(db.Integer)
     addedOnDate = db.Column(sqlalchemy.types.DateTime())
+    engagement = db.Column(db.Integer)
 
     def get_id(self):
         return self.productId

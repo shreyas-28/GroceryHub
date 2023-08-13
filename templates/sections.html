@@ -1,5 +1,9 @@
 {% from 'productMacro.html' import productCard %} {% extends "base.html" %} {%
-block content %}
+block displayUserName %}
+<a class="nav-link" style="color: rgb(86, 86, 86)"
+  >Welcome {{current_user.username}}</a
+>
+{% endblock %} {% block content %}
 <div
   style="
     display: flex;

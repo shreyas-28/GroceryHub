@@ -1,0 +1,34 @@
+{% extends "base.html" %} {% from 'macros.html' import sectionCard %} {% from
+'productMacro.html' import productCard%} {% block displayUserName %}
+<a class="nav-link" style="color: rgb(86, 86, 86)"
+  >Welcome {{current_user.username}}</a
+>
+{% endblock %} {% block content %} {% if searchedSections|length == 0 %}
+<div class="alert alert-warning" role="alert">No such section available.</div>
+{% else %}
+<div class="row">
+  {% for section in searchedSections %} {{sectionCard(section)}} {% endfor %}
+</div>
+{% endif %}
+<hr class="hr hr-blurry" />
+<form
+  method="POST"
+  action="{{url_for('search',advancedSearch=True)}}"
+  class="form-inline"
+  style="margin-left: 25%"
+>
+  <div class="form-group row">
+    {{advancedSearch.manufacturingDateFilter(class="form-control")}}{{advancedSearch.priceFilter(class="form-control")}}{{advancedSearch.submit(class="btn
+    btn-info")}}
+  </div>
+</form>
+<hr class="hr hr-blurry" />
+{% if searchedProducts|length == 0 %}
+<div class="alert alert-warning" role="alert">No such product in store.</div>
+{% else %}
+<div class="row">
+  {% for product in searchedProducts %}
+  <h6>{{productCard(product)}}</h6>
+  {% endfor %}
+</div>
+{% endif %} {%endblock %}

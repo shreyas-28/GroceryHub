@@ -57,85 +57,108 @@
   </div>
 
   {% endmacro %} {% macro productForm(form,sections) %}
-  <div style="display: flex; flex-direction: row">
-    <form method="POST" action="{{form.action}}">
-      {{ form.csrf_token }} {{form.hidden_tag()}} {{form.productName}}
-      {{form.productImage}}{{form.manufacturingDate}}{{form.expiryDate}}{{form.quantityInStore}}
-      {{form.valuePerUnit}}
-      <select name="section" id="section">
-        {% for sec in sections %}
-        <option value="{{ sec }}" selected>{{ sec }}</option>
-        {% endfor %}
-      </select>
-      {{form.submit}}
-    </form>
-  </div>
-  {% endmacro %} {% macro productCard(productData) %} {% if
-  productData.quantityInStore == 0 %}
-  <div
-    class="card"
-    style="
-      height: 350px;
-      width: 12rem;
-      background-color: #64cddd71 !important;
-      margin: 0.25rem 0.25rem;
-      position: absolute;
-      z-index: 1;
-      align-items: center;
-    "
-  >
-    <h5 style="margin-top: 9rem; background: white; width: 100%">
-      Out of Stock
-    </h5>
-  </div>
-  {% endif %}
-  <div
-    class="card"
-    style="
-      height: 350px;
-      width: 12rem;
-      background-color: #64cddd !important;
-      margin: 0.25rem 0.25rem;
-    "
-  >
+  <div  style="width: 60%;">
+  <h6 style="color: rgb(86, 86, 86)">Add a new product</h6>
+    <form class="form "method="POST" action="{{form.action}}">
+      {{ form.csrf_token }} {{form.hidden_tag()}} 
+      <div class="form-group">
+
+        {{form.productName(class="form-control")}}
+        {{form.productImage(class="form-control")}}
+        <div class="form-group">
+
+          <label >Expiry Date</label>
+          {{form.expiryDate(class="form-control")}}
+        </div>
+        <div class="form-group">
+
+          <label > Manufacturing Date</label>
+          {{form.manufacturingDate(class="form-control")}}
+        </div>
+      </div>
+<div class="form-group">
+
+  {{form.valuePerUnit(class="form-control")}}
+  {{form.quantityInStore(class="form-control")}}
+  
+  
+  <select class="form-control" name="section" id="section">
+    {% for sec in sections %}
+    <option value="{{ sec }}" selected>{{ sec }}</option>
+    {% endfor %}
+  </select>
+  {{form.submit(class="form-control btn-info")}}
+</div>
+</form>
+</div>
+{% endmacro %} {% macro productCard(productData) %}
+  <div>
+    {% if productData.quantityInStore == 0 %}
     <div
-      class="card-body"
-      styles="display:flex !important; flex-direction:row;"
+      class="card"
+      style="
+        height: 350px;
+        width: 12rem;
+        background-color: #64cddd71 !important;
+        margin-left: 0.25rem;
+        position: absolute;
+        z-index: 1;
+        align-items: center;
+      "
     >
-      <h5 class="card-title" styles="font-size:1vw">
-        {{productData.productName}}
+      <h5 style="margin-top: 9rem; background: white; width: 100%">
+        Out of Stock
       </h5>
-      <h6 styles="font-size:0.75vw">{{productData.valuePerUnit}} Rs</h6>
     </div>
-    <img
-      class="card-img-top"
-      src="{{productData.productImage}}"
-      alt="Card image cap"
-      style="height: 10rem"
-    />
-    <a
-      href="{{url_for('productDetailView',productId=productData.productId)}}"
-      style="position: absolute; right: 1rem; top: 0.5rem; color: white"
-    >
-      <span class="material-symbols-outlined"> info </span>
-    </a>
-    {% if productData.quantityInCart %}
-    {{cartControlUtil(productData.quantityInCart,productData.productId)}} {%
-    else %}
-    <form
-      method="post"
-      action="{{url_for('editCart',kwargs ={'productId':productData.productId})}}"
-      type="button"
-      class="btn btn-secondary"
-    >
-      <input
-        type="submit"
-        value="Add to cart"
-        name="Add to cart"
-        style="all: unset"
-      />
-    </form>
     {% endif %}
+    <div
+      class="card"
+      style="
+        height: 350px;
+        width: 12rem;
+        background-color: #64cddd !important;
+        margin: 0.25rem 0.25rem;
+      "
+    >
+      <div
+        class="card-body"
+        styles="display:flex !important; flex-direction:row;"
+      >
+        <h5 class="card-title" styles="font-size:1vw">
+          {{productData.productName}}
+        </h5>
+        <h6 styles="font-size:0.75vw">{{productData.valuePerUnit}} Rs</h6>
+      </div>
+      <img
+        class="card-img-top"
+        src="{{productData.productImage}}"
+        alt="Card image cap"
+        style="height: 10rem"
+      />
+      <a
+        href="{{url_for('productDetailView',productId=productData.productId)}}"
+        style="position: absolute; right: 1rem; top: 0.5rem; color: white"
+      >
+        <span class="material-symbols-outlined"> info </span>
+      </a>
+      {% if productData.quantityInCart %}
+      {{cartControlUtil(productData.quantityInCart,productData.productId)}} {%
+      else %}
+      <form
+        method="post"
+        action="{{url_for('editCart',kwargs ={'productId':productData.productId})}}"
+        type="button"
+        class="btn btn-secondary"
+      >
+        <input
+          type="submit"
+          value="Add to cart"
+          name="Add to cart"
+          style="all: unset"
+        />
+      </form>
+      {% endif %}
+    </div>
   </div>
   {% endmacro %} {% macro productCartView(productData,quantity) %}
   <li
@@ -212,7 +235,10 @@
   {% endmacro %}
 </div>
 {% macro editProductForm(form,productsList) %}
-<form
+<div style="width: 30%;">
+
+  <h6 style="color: rgb(86, 86, 86)">Edit product</h6>
+  <form
   method="POST"
   action="{{url_for('editProduct')}}"
   style="
@@ -220,23 +246,34 @@
     width: 100%;
     flex-direction: column;
     justify-content: space-between;
-  "
+    "
 >
-  <div style="display: flex; flex-direction: row">
-    <select name="productToEdit" id="productToEdit">
-      {% for product in productsList %}
-      <option value="{{ product.productName }}" selected>
-        {{ product.productName }}
-      </option>
-      {% endfor %}
-    </select>
-    {{form.productValue}}
-    <select name="productInStock" id="productInStock">
-      {% for stockValue in ['In stock','Out of stock'] %}
+<div class = "form-group inline"style="display: flex; flex-direction: row">
+  <select class='form-control'name="productToEdit" id="productToEdit">
+    {% for product in productsList %}
+    <option value="{{ product.productName }}" selected>
+      {{ product.productName }}
+    </option>
+    {% endfor %}
+  </select>
+  {{form.productValue}}
+</div >
+  <div>
+    Change Stock
+    <input
+    type="checkbox"
+    id="changeStock"
+    name="changeStock"
+    value="changeStock"
+    />
+  </div>
+    <select class="form-control" name="productInStock" id="productInStock">
+      {% for stockValue in ['Change stock','Out of stock'] %}
       <option value="{{ stockValue }}" selected>{{ stockValue}}</option>
       {% endfor %}
     </select>
-    {{form.unitsInStock}} {{form.submitEdit}}
+    {{form.unitsInStock(class="form-control")}} {{form.submitEdit(class="btn btn-info")}}
+
   </div>
 </form>
 {% endmacro %}

@@ -56,21 +56,34 @@
             <a class="nav-link" href="{{url_for('admin')}}">Manager </a>
           </li>
           {% endif %}
-
-          <form class="form-inline my-2 my-lg-0">
+          <form
+            class="form-inline my-2 my-lg-0"
+            method="POST"
+            action="{{url_for('search')}}"
+          >
             <input
               class="form-control mr-sm-2"
               type="search"
+              id="Search"
               placeholder="Search"
               aria-label="Search"
+              name="Search"
             />
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+            <button class="btn btn-outline-info my-2 my-sm-0" type="submit">
               Search
             </button>
           </form>
-          <li class="nav-item" style="margin-left: 30rem">
+          <li class="nav-item" style="margin-left: 5rem">
             <a class="nav-link" href="{{url_for('logout')}}">Logout</a>
           </li>
+          {% if not current_user.isManager and not current_user.isAdmin %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{url_for('requestManager')}}"
+              >Request
+            </a>
+          </li>
+          {% endif %}
+          <li class="nav-item">{% block displayUserName %} {% endblock %}</li>
         </ul>
       </div>
     </div>

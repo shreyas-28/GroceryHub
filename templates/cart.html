@@ -1,5 +1,11 @@
 {% from 'productMacro.html' import productCartView %} {% extends "base.html" %}
-{% block content %}
+{% block displayUserName %}
+<a class="nav-link" style="color: rgb(86, 86, 86)"
+  >Welcome {{current_user.username}}</a
+>
+{% endblock %} {% block content %} {% if message %}
+<div class="alert alert-warning" role="alert">{{message}}</div>
+{% endif %}
 <ul class="list-group">
   <li
     class="list-group-item"
@@ -22,6 +28,19 @@
   </div>
   {% else %} {% for product in cartDataProp %} {% if cartDataProp[product]>0%}
   {{productCartView(product,cartDataProp[product])}} {% endif %} {% endfor %}
+  {% if discount %}
+  <li class="list-group-item disabled" style="
+  margin-top: 0.5rem;
+  height: 3rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  "
+  >
+    <h6>{{discountMessage}}</h6>
+    <h6 style="margin-right: 4rem;">- {{discount}} Rs</h6>
+  </li>
+    {% endif %} 
   <li
     class="list-group-item"
     style="
@@ -33,12 +52,16 @@
     "
   >
     <h6>Total</h6>
-    <h6 style="margin-right: 4.25rem">{{totalValue}} Rs.</h6>
+    <h6 style="margin-right: 4.25rem">{{totalValue-discount}} Rs.</h6>
   </li>
 
   {% endif %}
 </ul>
-<form method="POST" action="{{url_for('handleBuyNow')}}">
-  <input type="submit" name="Buy Now" value="Buy Now" />
-</form>
-{% endblock %}
+  {% if cartDataProp.keys()|length != 0 %}
+  <form method="POST" action="{{url_for('handleBuyNow')}}">
+    <div class="form-group"></div>
+    <input type="submit" name="Buy Now" value="Buy Now" class="form-control btn btn-dark" />
+  </form>
+
+  {% endif %} {% endblock %}
+</li>

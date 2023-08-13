@@ -13,12 +13,16 @@ class ProductForm(FlaskForm):
     productImage = StringField(validators=[InputRequired(), Length(
         min=4, max=80)], render_kw={"placeholder": "Image"})
     manufacturingDate = DateField(
-        label='Manufacuring Date', validators=[DataRequired()])
-    expiryDate = DateField(label='Manufacuring Date',
-                           validators=[DataRequired()])
+        render_kw={"placeholder": "Manufacuring date"},
+        validators=[DataRequired()])
+    expiryDate = DateField(
+        render_kw={"placeholder": "Expiry date"},
+
+        validators=[DataRequired()])
     quantityInStore = IntegerField(
-        'Total quantity', validators=[InputRequired()])
-    valuePerUnit = FloatField('Cost/Unit', validators=[InputRequired()])
+        render_kw={"placeholder": "Total quantity"}, validators=[InputRequired()])
+    valuePerUnit = IntegerField(
+        render_kw={"placeholder": 'Cost/Unit'}, validators=[InputRequired()])
     section = StringField(validators=[InputRequired(), Length(
         min=4, max=80)], render_kw={"placeholder": "section"})
     submit = SubmitField("Add Product")
@@ -30,7 +34,7 @@ class EditProductForm(FlaskForm):
     productValue = StringField(render_kw={"placeholder": "Edit value"})
     productInStock = StringField(render_kw={"placeholder": "Edit in stock"})
     unitsInStock = IntegerField(
-        'Total quantity')
+        render_kw={"placeholder": "Edit in stock"})
     submitEdit = SubmitField("Edit Product")
 
 
@@ -40,3 +44,11 @@ class SectionForm(FlaskForm):
     editSectionName = StringField(
         render_kw={"placeholder": "Edit section name"})
     submitEdit = SubmitField("Edit Section")
+
+
+class AdvancedSearch(FlaskForm):
+    manufacturingDateFilter = DateField(
+        render_kw={"placeholder": "Manufacuring date"})
+    priceFilter = IntegerField(
+        render_kw={"placeholder": "Price"})
+    submit = SubmitField("Advanced Search")

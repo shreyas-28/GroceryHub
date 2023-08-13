@@ -3,22 +3,17 @@
 <form
   method="POST"
   action="{{form.action}}"
-  style="
-    display: flex;
-    height: 9rem;
-    width: 100%;
-    flex-direction: column;
-    justify-content: space-between;
-  "
+  class="form"
+
 >
   {{ form.csrf_token }} {{form.hidden_tag()}}
-  <div>{{form.username(style="width:100%")}}</div>
-  <div>{{form.password(style="width:100%")}}</div>
-  <div>
+  <div>{{form.username(class='form-control')}}</div>
+  <div>{{form.password(class="form-control")}}</div>
+  <div style="margin: 1rem;">
     <input type="radio" name="isAdmin" id="isAdmin" value="Yes"> Admin Login? </input>
     <input type="radio" name="isManager" id="isManager" value="Yes"> Manager Login? </input>
   </div>
-  <div>{{form.submit(style="width:100%")}}</div>
+  <div>{{form.submit(class='form-control btn-info')}}</div>
 </form>
 {% if form.errors%} {{form.errors}} {% endif %} {% endmacro %}
 
@@ -27,40 +22,34 @@
 <form
   method="POST"
   action="{{url_for('editSection',kwargs={'action':'add'})}}"
-  style="
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-    justify-content: space-between;
-  "
+  class="form-inline"
 >
+<div class='form-group'>
   {{ form.csrf_token }} 
   <div>
-    {{form.sectionName}}  
-    {{form.submit}}
+    {{form.sectionName(class="form-control")}}  
+    {{form.submit(class="btn btn-info")}}
   </div>
 </form>
+</div>
 <form
   method="POST"
   action="{{url_for('editSection',kwargs={'action':'edit'})}}"
-  style="
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-    justify-content: space-between;
-    "
+  class="form-inline"
     >
-  {{form.csrf_token}}
-  <div>
-    <select name="sectionToEdit" id="sectionToEdit">
-      {% for sec in sections %}
-      <option value="{{ sec }}" SELECTED>{{ sec }}</option>
-      {% endfor %}     
-    </select>
-    {{form.editSectionName}}
-    {{form.submitEdit}}
+    <div class="form-group">
+      {{form.csrf_token}}
+      <div>
+        <select class="form-control" name="sectionToEdit" id="sectionToEdit">
+          {% for sec in sections %}
+          <option value="{{ sec }}" SELECTED>{{ sec }}</option>
+          {% endfor %}     
+        </select>
+        {{form.editSectionName(class="form-control")}}
+        {{form.submitEdit(class="btn btn-info")}}
+      </div>
+    </form>
   </div>
-  </form>
 {% endmacro %}
 
 
@@ -69,20 +58,19 @@
 <form
   method="POST"
   action="{{url_for('raiseTicket')}}"
-  style="
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-    justify-content: space-between;
-  "
+  class="form-inline"
+  
+
 >
+<div class="form-group">
   {{ form.csrf_token }} 
   <div>
-    {{form.ticketRequest}}  
-    {{form.ticketTarget}}
-    {{form.ticketDetails}}
-    {{form.submit}}
+    {{form.ticketRequest(class="form-control")}}  
+    {{form.ticketTarget(class="form-control")}}
+    {{form.ticketDetails(class="form-control")}}
+    {{form.submit(class=" form-control btn-info")}}
   </div>
+</div>
 </form>
 {% endmacro %}
 
@@ -107,13 +95,21 @@
     method="POST"
     action="{{url_for('handleTicket',kwargs = {'ticketId' : ticket.ticketId,'approved':True})}}"
   >
-  <input type="submit" name="Accept" value="Accept" id="response" />
+  <input class = "btn btn-info" type="submit" name="Accept" value="Accept" id="response" />
 </form>
 <form
     method="POST"
     action="{{url_for('handleTicket',kwargs = {'ticketId' : ticket.ticketId,'approved':False})}}"
   >
-<input type="submit" name="Deny" value="Deny" id="response" />
+<input class = "btn btn-info"type="submit" name="Deny" value="Deny" id="response" />
 </form>
+</div>
+{% endmacro %}
+
+
+{% macro sectionCard(section) %}
+<div style="margin: 0.25rem 0.25rem;">
+    <a 
+    href='{{url_for("sections",sectionCategory = section.sectionKey)}}' class="btn btn-light">{{section.sectionKey|capitalize}}</a>
 </div>
 {% endmacro %}
