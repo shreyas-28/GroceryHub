@@ -4,9 +4,8 @@ from flask_login import LoginManager, current_user, login_user, login_required, 
 from flask_restful import Api
 from sqlalchemy import desc
 import Forms.regLoginForm as loginForms
-import Forms.Product as addProductForm  # Maybe rename it
+import Forms.Product as addProductForm
 from wtforms.validators import ValidationError
-from utils import fix_db
 from utils import cart_init, editEngagement, updateCart
 from Models.mainModel import db
 from Models.userModel import UserModel
@@ -157,7 +156,7 @@ def editProduct():
                 editEngagement(db, product, +1)
                 print("Updating product." + product.productName)
                 product.quantityInStore = productEditForm.unitsInStock.data
-                product.addedOnDate = datetime.now()  # TODO FIX THIS
+                product.addedOnDate = datetime.now()
         if productEditForm.productValue.data:
             editEngagement(db, product, +1)
             product.valuePerUnit = productEditForm.productValue.data

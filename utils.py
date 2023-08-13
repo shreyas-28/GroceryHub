@@ -56,7 +56,7 @@ def updateCart(db, existingCart):
 
 
 def fix_db(db):
-
+    # ProductModel.query.filter_by(productName='TestProduct').delete()
     # users = UserModel.query.all()
     # for user in users:
     #     user.firstOrder = True
